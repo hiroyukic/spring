@@ -1,3 +1,20 @@
+tools - 
+
+Title
+&DeployC
+
+Comamand
+C:\arduino-1.6.12\hardware\tools\avr\bin\avrdude.exe
+
+Argument
+-F -v -patmega328p -carduino  -P\\.\COM3 -b115200 -D -Uflash:w:"$(ProjectDir)Debug$(ItemFileName).hex":i  -CC:\arduino-1.6.12\hardware\tools\avr\etc\avrdude.conf
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+
 #ifndef F_CPU
 #define F_CPU 16000000UL // 16 MHz clock speed
 #endif
