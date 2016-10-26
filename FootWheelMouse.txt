@@ -1,0 +1,196 @@
+#include <Keyboard.h>
+
+  #include "Mouse.h"
+  
+  const int ButtonBlack1 = 2;  // 左１ボタン→PWM[2]
+    const int ButtonRed2 = 3;    // 左２ボタン→PWM[3]
+  const int ButtonGreen3 = 4;  // 右２ボタン→PWM[4]
+  const int ButtonBlue4 = 5;   // 右１ボタン→PWM[5]
+  
+  const int LED = 13;
+  char ctrlKey = KEY_LEFT_GUI;
+
+  
+  //int range = 5;              // output range of X or Y movement; affects movement speed
+  //int responseDelay200 = 200;     // response delay of the mouse, in ms
+  //int responseDelay100 = 150;  
+  
+    int responseDelay1 = 200;     // response delay of the mouse, in ms
+  int responseDelay2 = 150;  
+  int responseDelay3 = 150;  
+  int responseDelay4 = 200;  
+  
+  void setup() {
+    //Serial.begin(9600); //シリアル通信速度（Serial.println 使用時）
+    // input
+    pinMode(ButtonBlack1, INPUT); 
+    pinMode(ButtonRed2, INPUT); 
+    pinMode(ButtonGreen3, INPUT); 
+    pinMode(ButtonBlue4, INPUT); 
+    
+    // output(LED)
+    pinMode(13, OUTPUT);
+    
+    // initialize mouse control:
+    Mouse.begin();
+    Keyboard.begin();
+  }
+  
+  
+  void loop() {
+
+
+
+
+   if (digitalRead(ButtonBlack1) == HIGH) {
+    //Keyboard.press(ctrlKey);
+    //Keyboard.press('n');
+    // entenn
+    Keyboard.write(KEY_RETURN);
+   }
+    
+  //  int clickState = digitalRead(ButtonBlue4);
+  
+
+
+   if (digitalRead(ButtonBlack1) == LOW && digitalRead(ButtonRed2) == LOW && digitalRead(ButtonGreen3) == LOW && digitalRead(ButtonBlue4) == LOW) {
+        delay(10);
+        digitalWrite(13, LOW);
+        return;
+   }
+
+
+   /* 倍速ページアップ */
+   if (digitalRead(ButtonBlack1) == HIGH && digitalRead(ButtonGreen3) == HIGH) {
+        responseDelay1 = 25;
+        digitalWrite(13, HIGH);
+        Mouse.move(0,0,1);      
+        delay(responseDelay1); 
+        return;
+    }
+
+   /* 倍速ページダウン */
+   if (digitalRead(ButtonBlack1) == HIGH && digitalRead(ButtonBlue4) == HIGH) {
+        responseDelay1 = 25;
+        digitalWrite(13, HIGH); 
+        Mouse.move(0,0,-1); 
+        delay(responseDelay1);
+        return;
+    }
+
+
+   /* 1/2倍速ページアップ ************************/
+   if (digitalRead(ButtonRed2) == HIGH && digitalRead(ButtonGreen3) == HIGH) {
+        responseDelay1 = 400;
+        digitalWrite(13, HIGH);
+        Mouse.move(0,0,1);      
+        delay(responseDelay1); 
+        return;
+    }
+    
+   /* 1/2倍速ページダウン */
+   if (digitalRead(ButtonRed2) == HIGH && digitalRead(ButtonBlue4) == HIGH) {
+        responseDelay1 = 400;
+        digitalWrite(13, HIGH); 
+        Mouse.move(0,0,-1); 
+        delay(responseDelay1);
+        return;
+    }
+          
+    /* ========================================== */
+    /* ButtonBlack1 左１ */
+    /* ========================================== */
+    /*
+    if (digitalRead(ButtonBlack1) == LOW) {
+        digitalWrite(13, LOW);    // LED 消灯 
+        responseDelay1 = 200;
+    } else 
+    if (digitalRead(ButtonBlack1) == HIGH) {
+        delay(5);
+
+        responseDelay1 = responseDelay1 -5;
+        if(responseDelay1 < 100) {
+          responseDelay1 = 100;
+        }
+        
+        //Serial.println( responseDelay1 );
+        
+        if (digitalRead(ButtonBlack1) == HIGH) {
+ 
+          digitalWrite(13, HIGH);  
+          Mouse.move(0,0,1);      
+          delay(responseDelay1);  
+        }
+    }
+    */
+  
+    /* ========================================== */
+    /* ButtonRed2 左２*/
+    /* ========================================== */
+    /*
+    if (digitalRead(ButtonRed2) == LOW) {
+        responseDelay2 = 120;
+        digitalWrite(13, LOW);    // LED 消灯 
+    } else 
+    if (digitalRead(ButtonRed2) == HIGH) {
+        delay(5);
+        if (digitalRead(ButtonRed2) == HIGH) {
+          responseDelay2 = responseDelay2 - 5;
+          if(responseDelay2 < 40) {
+            responseDelay2 = 40;
+          }
+          digitalWrite(13, HIGH);  
+          Mouse.move(0,0,1);   
+          delay(responseDelay2); 
+        }
+    }
+    */
+  
+    /* ========================================== */
+    /* ButtonGreen3 右２*/
+    /* ========================================== */
+    if (digitalRead(ButtonGreen3) == LOW) {
+      responseDelay3 = 120;
+      digitalWrite(13, LOW);    // LED 消灯 
+    } else
+    if (digitalRead(ButtonGreen3) == HIGH) {
+        delay(5);
+        //Serial.println( responseDelay3 );
+        if (digitalRead(ButtonGreen3) == HIGH) {
+          /* 遅延速度コントロール　*/
+          responseDelay3 = responseDelay3 - 8;
+          if(responseDelay3 < 60) {
+            responseDelay3 = 60;
+          }
+          /* SW_ON */
+          digitalWrite(13, HIGH);   // LED 点灯 
+          Mouse.move(0,0,1);        // Page UP 
+          delay(responseDelay3);  /* Mouse動作遅延 */
+          return;
+        }
+    }
+  
+    /* ========================================== */
+    /* 6 : ButtonBlue4 右１*/
+    /* ========================================== */
+    if (digitalRead(ButtonBlue4) == LOW) {
+        digitalWrite(13, LOW);    // LED 消灯 
+        responseDelay4 = 200;
+    } else 
+    if (digitalRead(ButtonBlue4) == HIGH) {
+        delay(5);
+        if (digitalRead(ButtonBlue4) == HIGH) {
+          /* 遅延速度コントロール　*/
+          responseDelay4 = responseDelay4 - 8;
+          if(responseDelay4 < 60) {
+            responseDelay4 = 60;
+          }
+          /* SW_ON */
+          digitalWrite(13, HIGH);   // LED 点灯 
+          Mouse.move(0,0,-1);        // Page UP 
+          delay(responseDelay4);  /* Mouse動作遅延 */
+          return;
+        }
+    }
+  
+  }
